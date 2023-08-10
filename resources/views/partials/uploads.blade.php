@@ -1,9 +1,8 @@
-@dd(storage_path('app/files'));
-@foreach (Storage::allFiles(storage_path('app/files')) as $file)
+@foreach (Storage::files('files') as $file)
     <div class="scrollitem">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <img src="thumbnails/<?= $file??'' ?>" style="max-width:300px;">
+                <img src="{{(asset($file))}}" style="max-width:300px;">
             </div>
         </div>
 

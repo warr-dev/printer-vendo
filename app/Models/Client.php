@@ -33,7 +33,7 @@ class Client extends Model
         }
         return null;
     }
-    public function getFilePath()
+    public function getFolder()
     {
         return $this->mac != 'admin' ? $this->str_replace(':', '', $this->mac) : '';
     }

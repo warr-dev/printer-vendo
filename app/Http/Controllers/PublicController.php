@@ -23,6 +23,9 @@ class PublicController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filename = $file->getClientOriginalName();
+            $extension=pathinfo($file)['extension'];
+            $target_file = storage_path('app/thumbs/'. $request->client->getFolder() ). '/' . $filename . "." . $extension;
+            $pdf = new Pdf($f);
 
             // Move the uploaded file to a storage location
             $file->storeAs('files/'.$request->client->getFilePath(), $filename);
