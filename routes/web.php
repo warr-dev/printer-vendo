@@ -16,7 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [PublicController::class, 'index'])->name('public');
+// Route::get('/', [PublicController::class, 'index'])->name('public');
+Route::controller(PublicController::class)->group(function ($route) {
+    $route->get('/','index')->name('public');
+    $route->post('/upload/doc','uploadDoc')->name('upload.doc');
+});
 
 Route::get('/index', function () {
     return view('dashboard');

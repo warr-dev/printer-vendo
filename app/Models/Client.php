@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Client extends Model
 {
     use HasFactory;
-    protected $fillable=[
+    protected $fillable = [
         'mac',
         'ip',
         'credits'
@@ -31,5 +31,10 @@ class Client extends Model
             );
             return $client;
         }
+        return null;
+    }
+    public function getFilePath()
+    {
+        return $this->mac != 'admin' ? $this->str_replace(':', '', $this->mac) : '';
     }
 }
