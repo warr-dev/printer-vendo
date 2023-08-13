@@ -6,6 +6,7 @@ use App\Models\Client;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToImage\Pdf;
 
 class PublicController extends Controller
@@ -29,16 +30,13 @@ class PublicController extends Controller
 
             // Move the uploaded file to a storage location
             $actual = $file->storeAs('files/' . $request->client->getFolder(), $filename);
-            $actual=storage_path('app/'.$actual);
+            $actual = storage_path('app/' . $actual);
 
-            $target_file = storage_path('app/thumbs/' . $request->client->getFolder()) . '/' . $filename . "." . $extension;
+            Storage::disk('thumbs')->makeDirectory($request->client->getFolder());
+            $target_file = Storage::disk('thumbs')->path($request->client->getFolder()) . '/' . $filename . "." . $extension.'.jpeg';
             $pdf = new Pdf($actual);
             $pdf->setPage(1)->saveImage($target_file);
-
-            $files = [];
-
-            // return Response::success('document uploaded successful');
-            return view('partials.uploads', ['files' => ['sda', 'sdas']]);
+            return view('partials.uploads');
         }
 
         return 'No file uploaded.';

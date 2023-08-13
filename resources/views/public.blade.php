@@ -18,6 +18,7 @@
     <!-- Custom styles for this template -->
     <link href="/css/style.css" rel="stylesheet">
     <link href="/css/style-responsive.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/toastr.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Custom styles for this template -->
     <style>
@@ -166,51 +167,19 @@
                 <div class="lock-screen">
                     <div class="action">
                         <div>
-                            <h4><a data-toggle="modal" href="#myModal"><i class="fa fa-upload"
-                                        style="font-size:5rem"></i></a></h4>
+                            <h4><a data-toggle="modal" href="#uploadDocs"><i class="fa fa-upload" style="font-size:5rem"></i></a></h4>
                             <p>Add File</p>
                         </div>
                         <div>
-                            <h4><a data-toggle="modal" class="addcoins" href="#addcoins"><i class="fa fa-dollar"
-                                        style="font-size:5rem"></i></a></h4>
+                            <h4><a data-toggle="modal" class="addcoins" href="#addcoins"><i class="fa fa-dollar" style="font-size:5rem"></i></a></h4>
                             <p>Add Credits</p>
                         </div>
                     </div>
-                    <!-- Modal -->
-                    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal"
-                        class="modal fade">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"
-                                        aria-hidden="true">&times;</button>
-                                    <h4 class="modal-title">Upload Files</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <!--main content start-->
-                                    <div class="row mt" id="asd">
-                                        <!-- <div class="white-panel mt">
-                        <div class="panel-body">
-                          <form action="/controller/uploadfile.php" class="dropzone" id="my-awesome-dropzone"></form>
-                        </div>
-                      </div> -->
-                                        <form action="{{ route('upload.doc') }}" class="dropzone"
-                                            id="my-awesome-dropzone"></form>
-                                    </div>
-                                </div>
-                                <div class="modal-footer centered">
-                                    <!-- <button data-dismiss="modal" class="btn btn-theme04" type="button">Cancel</button> -->
-                                    <button data-dismiss="modal" class="btn btn-theme03" type="button">Done</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- modal -->
                 </div>
             </div>
             <!-- /col-lg-4 -->
             <div id="af" class="scrollmenu" style="width:100%">
-              @include('partials.uploads',['files'=>['sdas','sdasda']])
+                @include('partials.uploads')
             </div>
             <!-- /lock-screen -->
         </div>
@@ -219,8 +188,34 @@
     </div>
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printme"
-        class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="uploadDocs" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Upload Files</h4>
+                </div>
+                <div class="modal-body">
+                    <!--main content start-->
+                    <div class="row mt" id="asd">
+                        <!-- <div class="white-panel mt">
+                        <div class="panel-body">
+                          <form action="/controller/uploadfile.php" class="dropzone" id="my-awesome-dropzone"></form>
+                        </div>
+                      </div> -->
+                        <form action="{{ route('upload.doc') }}" class="dropzone" id="my-awesome-dropzone"></form>
+                    </div>
+                </div>
+                <div class="modal-footer centered">
+                    <!-- <button data-dismiss="modal" class="btn btn-theme04" type="button">Cancel</button> -->
+                    <button data-dismiss="modal" class="btn btn-theme03" type="button">Done</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- modal -->
+    <!-- Modal -->
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printme" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -262,8 +257,7 @@
                     <div class="row cont">
                         <label class="col-sm-3 control-label"> Pages </label>
                         <div class="col-sm-9">
-                            <input type="text" name="pages" class="form-control compute"
-                                placeholer="1,2,3 or 2-4 leave blank for all pages">
+                            <input type="text" name="pages" class="form-control compute" placeholer="1,2,3 or 2-4 leave blank for all pages">
                             <span class="help-block">1,2,3 or 2-4 leave blank for all pages</span>
                         </div>
                     </div>
@@ -271,8 +265,7 @@
                     <div class="row cont">
                         <label class="col-sm-3 control-label"> Copies </label>
                         <div class="col-sm-9">
-                            <input type="number" name="copies" class="form-control compute" value="1"
-                                min="1">
+                            <input type="number" name="copies" class="form-control compute" value="1" min="1">
                             <!-- <span class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span> -->
                         </div>
                     </div>
@@ -289,8 +282,7 @@
                     <button data-dismiss="modal" class="btn btn-theme04" type="button">Cancel</button>
                     <button class="btn btn-theme02 addcoins" type="button" data-toggle="modal" href="#addcoins">Add
                         coins</button>
-                    <button class="btn btn-primary" onclick="compute()" id="sumbut" type="button"
-                        data-toggle="modal" href="#summary">Summary</button>
+                    <button class="btn btn-primary" onclick="compute()" id="sumbut" type="button" data-toggle="modal" href="#summary">Summary</button>
                     <button onclick="printit()" class="btn btn-theme03" type="button">Print</button>
                 </div>
             </div>
@@ -299,8 +291,7 @@
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="summary"
-        class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="summary" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -355,8 +346,7 @@
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addcoins"
-        class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addcoins" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -382,8 +372,7 @@
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printing"
-        class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printing" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -414,6 +403,7 @@
     <script src="/lib/common-scripts.js"></script>
     <!--script for this page-->
     <script src="/lib/dropzone/dropzone.js"></script>
+    <script src="/lib/toastr.min.js"></script>
     <script>
         Dropzone.options.myAwesomeDropzone = {
             paramName: "file", // The name that will be used to transfer the file
@@ -421,10 +411,13 @@
             sending: function(file, xhr, formData) {
                 // Add CSRF token to the formData
                 formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute(
-                'content'));
+                    'content'));
             },
             success: function(file, res) {
                 document.getElementById('af').innerHTML = res;
+                this.removeFile(file);
+                toastr.success('Documents Uploaded Successfully')
+                $('#uploadDocs').modal('hide')
             }
         }
         $('.addcoins').click((e) => {

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ClientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PublicController;
 use Illuminate\Http\Request;
@@ -18,13 +20,21 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('/', [PublicController::class, 'index'])->name('public');
 Route::controller(PublicController::class)->group(function ($route) {
-    $route->get('/','index')->name('public');
-    $route->post('/upload/doc','uploadDoc')->name('upload.doc');
+    $route->get('/', 'index')->name('public');
+    $route->post('/upload/doc', 'uploadDoc')->name('upload.doc');
 });
+Route::middleware(['auth'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function ($route) {
+        $route->resource('/', AdminController::class);
+        $route->get('/logs', [AdminController::class, 'logs']);
+        // $route->post('/upload/doc','uploadDoc')->name('upload.doc');
+    });
 
-Route::get('/index', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/admin', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

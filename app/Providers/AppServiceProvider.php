@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Routing\Route;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider

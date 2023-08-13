@@ -35,6 +35,6 @@ class Client extends Model
     }
     public function getFolder()
     {
-        return $this->mac != 'admin' ? $this->str_replace(':', '', $this->mac) : '';
+        return $this->mac != 'admin' ? str_replace(':', '', $this->mac) : 'admin';
     }
 }

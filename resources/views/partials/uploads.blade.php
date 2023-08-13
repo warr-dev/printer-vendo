@@ -1,8 +1,8 @@
-@foreach (Storage::files('files') as $file)
+@foreach (Storage::disk('thumbs')->files(request()->client->getFolder()) as $file)
     <div class="scrollitem">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <img src="{{(asset($file))}}" style="max-width:300px;">
+                <img src="{{(asset('thumbs/'.$file))}}" style="max-width:300px;">
             </div>
         </div>
 
