@@ -26,18 +26,18 @@ class PublicController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filename = $file->getClientOriginalName();
-            $extension = pathinfo($file)['extension'];
+            $extension = pathinfo($filename)['extension'];
 
             // Move the uploaded file to a storage location
             $actual = $file->storeAs('files/' . $request->client->getFolder(), $filename);
             $actual = storage_path('app/' . $actual);
 
             Storage::disk('thumbs')->makeDirectory($request->client->getFolder());
-            $target_file = Storage::disk('thumbs')->path($request->client->getFolder()) . '/' . $filename . "." . $extension . '.jpg';
+            $target_file = Storage::disk('thumbs')->path($request->client->getFolder()) . '/' . $filename . '.png';
             $pdf = new Pdf($actual);
             $pdf->setPage(1)->setOutputFormat('png')->saveImage($target_file);
             Storage::disk('files')->makeDirectory($request->client->getFolder() . '/preview/' . basename($actual));
-            $destination = dirname($actual) . '/preview/' . basename($actual) . '';
+            $destination = dirname($actual) . '/preview/' . basename($actual);
             $pdf->saveAllPagesAsImages($destination);
             return view('partials.uploads');
         }
@@ -45,10 +45,13 @@ class PublicController extends Controller
         return 'No file uploaded.';
     }
 
-    public function printModal(Request $request) {
+    public function printModal(Request $request)
+    {
         $request->validate([
-            'file' =>'required|string'
+            'file' => 'required|string'
         ]);
-        return view('admin.partials.modal-print',$request->only(['file']));
+        $file= $request->get('file');
+        $pdf=new Pdf(storage_path('app/files/'.str_replace('/preview','',$file)));
+        return view('partials.modal-print', compact('file','pdf'));
     }
 }

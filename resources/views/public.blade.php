@@ -228,13 +228,11 @@
                 <div class="lock-screen">
                     <div class="action">
                         <div>
-                            <h4><a data-toggle="modal" href="#uploadDocs"><i class="fa fa-upload"
-                                        style="font-size:5rem"></i></a></h4>
+                            <h4><a data-toggle="modal" href="#uploadDocs"><i class="fa fa-upload" style="font-size:5rem"></i></a></h4>
                             <p>Add File</p>
                         </div>
                         <div>
-                            <h4><a data-toggle="modal" class="addcoins" href="#addcoins"><i class="fa fa-dollar"
-                                        style="font-size:5rem"></i></a></h4>
+                            <h4><a data-toggle="modal" class="addcoins" href="#addcoins"><i class="fa fa-dollar" style="font-size:5rem"></i></a></h4>
                             <p>Add Credits</p>
                         </div>
                     </div>
@@ -251,8 +249,7 @@
     </div>
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="uploadDocs"
-        class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="uploadDocs" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -279,14 +276,12 @@
     </div>
     <!-- modal -->
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printme"
-        class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printme" class="modal fade">
     </div>
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="summary"
-        class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="summary" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -341,8 +336,7 @@
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addcoins"
-        class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addcoins" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -368,8 +362,7 @@
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printing"
-        class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printing" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -402,15 +395,14 @@
     <script src="/lib/dropzone/dropzone.js"></script>
     <script src="/lib/toastr.min.js"></script>
     <script>
-        function initFile(filename) => {
+        const initFile = filename => {
             $('#printme').modal('show')
             $('#printme').html('Loading...')
             $.ajax({
                 type: "get",
                 url: "{{ route('modal.print') }}",
                 data: {
-                    _token = '',
-                    file = filename
+                    file: filename
                 },
                 success: function(response) {
                     $('#printme').html(response)
