@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::controller(PublicController::class)->group(function ($route) {
     $route->get('/', 'index')->name('public');
     $route->post('/upload/doc', 'uploadDoc')->name('upload.doc');
+    $route->get('/modal/print', 'printModal')->name('modal.print');
 });
 Route::middleware(['auth'])
     ->prefix('admin')

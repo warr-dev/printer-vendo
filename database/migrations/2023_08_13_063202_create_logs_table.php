@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->integer('client_id');
+            $table->foreignId('client_id')->references('id')->on('clients');
             $table->unsignedInteger('pages');
             $table->string('type');
             $table->string('size');

@@ -1,3 +1,4 @@
+{{-- @dd(App\Models\Client::getPreviewFolder(request()->client,'report 06-01-23.pdf')) --}}
 <!DOCTYPE html>
 <html>
 
@@ -126,6 +127,66 @@
         .credits {
             color: black;
         }
+
+        .slider-wrapper {
+            margin: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slides-container {
+            width: 80%;
+            display: flex;
+            overflow: hidden;
+            scroll-behavior: smooth;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .slide-arrow {
+            position: absolute;
+            display: flex;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            height: 4rem;
+            background-color: white;
+            border: none;
+            width: 2rem;
+            font-size: 3rem;
+            padding: 0;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 100ms;
+        }
+
+        .slide-arrow:hover,
+        .slide-arrow:focus {
+            opacity: 1;
+        }
+
+        #slide-arrow-prev {
+            left: 0;
+            padding-left: 0.25rem;
+            border-radius: 0 2rem 2rem 0;
+        }
+
+        #slide-arrow-next {
+            right: 0;
+            padding-left: 0.75rem;
+            border-radius: 2rem 0 0 2rem;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            flex: 1 0 100%;
+        }
+
+        .pages-container {
+            padding: 1rem
+        }
     </style>
 </head>
 
@@ -167,11 +228,13 @@
                 <div class="lock-screen">
                     <div class="action">
                         <div>
-                            <h4><a data-toggle="modal" href="#uploadDocs"><i class="fa fa-upload" style="font-size:5rem"></i></a></h4>
+                            <h4><a data-toggle="modal" href="#uploadDocs"><i class="fa fa-upload"
+                                        style="font-size:5rem"></i></a></h4>
                             <p>Add File</p>
                         </div>
                         <div>
-                            <h4><a data-toggle="modal" class="addcoins" href="#addcoins"><i class="fa fa-dollar" style="font-size:5rem"></i></a></h4>
+                            <h4><a data-toggle="modal" class="addcoins" href="#addcoins"><i class="fa fa-dollar"
+                                        style="font-size:5rem"></i></a></h4>
                             <p>Add Credits</p>
                         </div>
                     </div>
@@ -188,7 +251,8 @@
     </div>
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="uploadDocs" class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="uploadDocs"
+        class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -215,83 +279,14 @@
     </div>
     <!-- modal -->
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printme" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Print Files</h4>
-                </div>
-                <div class="modal-body">
-                    <center>
-                        <img class="pic" src="#" id="printimg" alt="">
-                    </center>
-
-                    <div class="row cont">
-                        <label class="col-sm-3 control-label"> Print Type </label>
-                        <div class="col-sm-9">
-                            <label class="checkbox-inline">
-                                <input type="radio" name="type" class="compute" value="colored" checked>
-                                Colored
-                            </label>
-                            <!-- <label class="checkbox-inline">
-                <input type="radio" name="type" class="compute" value="grayscale"> Grayscale
-              </label>
-              <label class="checkbox-inline">
-                <input type="radio" name="type" class="compute" value="bnw"> Black n White
-              </label> -->
-                        </div>
-                    </div>
-
-                    <div class="row cont">
-                        <label class="col-sm-3 control-label"> Paper Size </label>
-                        <div class="col-sm-9">
-                            <select class="form-control compute" name="size" id="papersize">
-                                <option value="Letter">Letter - US Letter (8.5x11 inches, or 216x279mm)</option>
-                                <option value="Legal">Legal - US Legal (8.5x14 inches, or 216x356mm)</option>
-                                <option value="A4">A4 - ISO A4 (8.27x11.69 inches, or 210x297mm)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row cont">
-                        <label class="col-sm-3 control-label"> Pages </label>
-                        <div class="col-sm-9">
-                            <input type="text" name="pages" class="form-control compute" placeholer="1,2,3 or 2-4 leave blank for all pages">
-                            <span class="help-block">1,2,3 or 2-4 leave blank for all pages</span>
-                        </div>
-                    </div>
-
-                    <div class="row cont">
-                        <label class="col-sm-3 control-label"> Copies </label>
-                        <div class="col-sm-9">
-                            <input type="number" name="copies" class="form-control compute" value="1" min="1">
-                            <!-- <span class="help-block">A block of help text that breaks onto a new line and may extend beyond one line.</span> -->
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row" id="sum">
-                        <div class="col-sm-12"> <span>Credits <span class="credits">credits PHP</span></span> </div>
-                        <div class="col-sm-12"> <span>Price: <span id="price"></span></span> </div>
-                        <div class="col-sm-12" id="bwpages"></div>
-                        <div class="col-sm-12" id="colpages"></div>
-                    </div>
-
-                </div>
-                <div class="modal-footer centered">
-                    <button data-dismiss="modal" class="btn btn-theme04" type="button">Cancel</button>
-                    <button class="btn btn-theme02 addcoins" type="button" data-toggle="modal" href="#addcoins">Add
-                        coins</button>
-                    <button class="btn btn-primary" onclick="compute()" id="sumbut" type="button" data-toggle="modal" href="#summary">Summary</button>
-                    <button onclick="printit()" class="btn btn-theme03" type="button">Print</button>
-                </div>
-            </div>
-        </div>
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printme"
+        class="modal fade">
     </div>
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="summary" class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="summary"
+        class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -346,7 +341,8 @@
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addcoins" class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addcoins"
+        class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -372,7 +368,8 @@
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printing" class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printing"
+        class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -405,13 +402,27 @@
     <script src="/lib/dropzone/dropzone.js"></script>
     <script src="/lib/toastr.min.js"></script>
     <script>
+        function initFile(filename) => {
+            $('#printme').modal('show')
+            $('#printme').html('Loading...')
+            $.ajax({
+                type: "get",
+                url: "{{ route('modal.print') }}",
+                data: {
+                    _token = '',
+                    file = filename
+                },
+                success: function(response) {
+                    $('#printme').html(response)
+                }
+            });
+        }
         Dropzone.options.myAwesomeDropzone = {
             paramName: "file", // The name that will be used to transfer the file
             maxFilesize: 100, // MB
             sending: function(file, xhr, formData) {
                 // Add CSRF token to the formData
-                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute(
-                    'content'));
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
             },
             success: function(file, res) {
                 document.getElementById('af').innerHTML = res;
@@ -420,249 +431,250 @@
                 $('#uploadDocs').modal('hide')
             }
         }
-        $('.addcoins').click((e) => {
-            $.ajax({
-                url: "cont.php?trigger=$mac",
-                error: (err) => {
-                    if (err.status == 500) $('#timer').html('server error')
-                    if (err.status == 400) $('#timer').html(err.responseText)
-                },
-                success: (res) => {
-                    starttimer();
-                }
-            });
-        })
 
-        function starttimer() {
-            let timer2 = 15;
-            const timer = setInterval(() => {
-                $.ajax({
-                    url: "cont.php?coins=$mac",
-                    error: (err) => {
-                        if (err.status == 500) $('#credits').html('error')
-                    },
-                    success: (res) => {
-                        res = JSON.parse(res)
-                        // $('.credits').map((ind,cred)=>{
-                        //   console.log(cred);
-                        //   cred.innerHTML=res.credits+' PHP'
-                        // })
-                        $('.credits').html(res.credits + ' PHP')
-                        // $('#mcreds').html(res.credits+' PHP')
-                    }
-                });
-                $('#timer').html(timer2)
-                if (timer2 == 0) {
-                    $('#timer').html('')
-                    clearInterval(timer);
-                }
-                timer2--;
-            }, 1000);
-        }
+        // $('.addcoins').click((e) => {
+        //     $.ajax({
+        //         url: "cont.php?trigger=$mac",
+        //         error: (err) => {
+        //             if (err.status == 500) $('#timer').html('server error')
+        //             if (err.status == 400) $('#timer').html(err.responseText)
+        //         },
+        //         success: (res) => {
+        //             starttimer();
+        //         }
+        //     });
+        // })
 
-        function getCoins() {
-            $.ajax({
-                url: "cont.php?coins=$mac",
-                error: (err) => {
-                    if (err.status == 500) $('#credits').html('error')
-                },
-                success: (res) => {
-                    res = JSON.parse(res)
-                    // $('.credits').map((ind,cred)=>{
-                    //   console.log(cred);
-                    //   cred.innerHTML=res.credits+' PHP'
-                    // })
-                    $('.credits').html(res.credits + ' PHP')
-                    // $('#mcreds').html(res.credits+' PHP')
-                }
-            });
-        }
+        // function starttimer() {
+        //     let timer2 = 15;
+        //     const timer = setInterval(() => {
+        //         $.ajax({
+        //             url: "cont.php?coins=$mac",
+        //             error: (err) => {
+        //                 if (err.status == 500) $('#credits').html('error')
+        //             },
+        //             success: (res) => {
+        //                 res = JSON.parse(res)
+        //                 // $('.credits').map((ind,cred)=>{
+        //                 //   console.log(cred);
+        //                 //   cred.innerHTML=res.credits+' PHP'
+        //                 // })
+        //                 $('.credits').html(res.credits + ' PHP')
+        //                 // $('#mcreds').html(res.credits+' PHP')
+        //             }
+        //         });
+        //         $('#timer').html(timer2)
+        //         if (timer2 == 0) {
+        //             $('#timer').html('')
+        //             clearInterval(timer);
+        //         }
+        //         timer2--;
+        //     }, 1000);
+        // }
 
-        function setdoc(node, f) {
-            let img = node.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.children[
-                0].children[0].children[0];
-            document.querySelector('#printimg').src = img.src;
-            file = f;
-            let extension = file.split('.').pop()
-            if (extension == 'pdf') {
-                $('#sumbut').show()
-                $.ajax({
-                    url: "controller/checkcolors.php",
-                    type: 'post',
-                    data: {
-                        checkcolors: file
-                    },
-                    error: (err) => {
-                        alert('error ')
-                    },
-                    success: (res) => {
-                        res = JSON.parse(res);
-                        console.log(res);
-                        bwpages = res.bwpages
-                        colpages = res.colored_pages
-                        spages = countt(1, res.pages)
-                        $('#bwpages').html(
-                            `<span>Detected BW pages: ${res.bw_counter} pages (${bwpages.join(', ')} )</span>`
-                        )
-                        $('#colpages').html(
-                            `<span>Detected Colored pages: ${res.colored} pages (${colpages.join(', ')} )</span>`
-                        )
-                        compute();
-                        // $('#cpages').html(`(${res.colored}) ${colpages.join(', ')}`)
-                        // $('#bnwpages').html(`(${res.bw_counter}) ${bwpages.join(', ')}`)
-                    },
-                });
-            } else {
-                $('#sumbut').hide()
-                $('#bwpages').html('')
-                $('#colpages').html('')
-            }
-        }
-        let file;
-        let bwpages = [];
-        let colpages = [];
-        let spages = [];
-        $('.compute').change((event) => {
-            compute()
-        });
-        let prices = {};
-        $.ajax({
-            url: "cont.php?prices",
-            error: (err) => {
-                if (err.status == 500) alert('error fetching prices')
-            },
-            success: (res) => {
-                res = JSON.parse(res);
-                // prices=res;
-                res.map((price) => {
-                    prices = Object.assign({}, prices, {
-                        [price.name]: price.price
-                    })
-                });
-                compute();
-            },
-        });
+        // function getCoins() {
+        //     $.ajax({
+        //         url: "cont.php?coins=$mac",
+        //         error: (err) => {
+        //             if (err.status == 500) $('#credits').html('error')
+        //         },
+        //         success: (res) => {
+        //             res = JSON.parse(res)
+        //             // $('.credits').map((ind,cred)=>{
+        //             //   console.log(cred);
+        //             //   cred.innerHTML=res.credits+' PHP'
+        //             // })
+        //             $('.credits').html(res.credits + ' PHP')
+        //             // $('#mcreds').html(res.credits+' PHP')
+        //         }
+        //     });
+        // }
 
-        function compute() {
-            let toprint = [];
-            let type = $(':input[name="type"]:checked').val();
-            // let size=$(':input[name="size"]:checked').val();
-            let size = $('#papersize').val();
-            let pages = $(':input[name="pages"]').val();
-            pages = pages.split(',');
-            let c = 0
-            if (pages == "") {
-                toprint = spages;
-            } else
-                pages.map((page) => {
-                    if (page.indexOf('-') > -1) {
-                        nums = page.split('-');
-                        c += nums[1] - nums[0] + 1
-                        let ar = countt(Number(nums[0]), Number(nums[1]));
-                        // console.log('ar',ar)
-                        toprint = [...toprint, ...ar];
-                    } else {
-                        c += 1
-                        toprint.push(Number(page))
-                    }
-                })
+        // function setdoc(node, f) {
+        //     let img = node.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.children[
+        //         0].children[0].children[0];
+        //     document.querySelector('#printimg').src = img.src;
+        //     file = f;
+        //     let extension = file.split('.').pop()
+        //     if (extension == 'pdf') {
+        //         $('#sumbut').show()
+        //         $.ajax({
+        //             url: "controller/checkcolors.php",
+        //             type: 'post',
+        //             data: {
+        //                 checkcolors: file
+        //             },
+        //             error: (err) => {
+        //                 alert('error ')
+        //             },
+        //             success: (res) => {
+        //                 res = JSON.parse(res);
+        //                 console.log(res);
+        //                 bwpages = res.bwpages
+        //                 colpages = res.colored_pages
+        //                 spages = countt(1, res.pages)
+        //                 $('#bwpages').html(
+        //                     `<span>Detected BW pages: ${res.bw_counter} pages (${bwpages.join(', ')} )</span>`
+        //                 )
+        //                 $('#colpages').html(
+        //                     `<span>Detected Colored pages: ${res.colored} pages (${colpages.join(', ')} )</span>`
+        //                 )
+        //                 compute();
+        //                 // $('#cpages').html(`(${res.colored}) ${colpages.join(', ')}`)
+        //                 // $('#bnwpages').html(`(${res.bw_counter}) ${bwpages.join(', ')}`)
+        //             },
+        //         });
+        //     } else {
+        //         $('#sumbut').hide()
+        //         $('#bwpages').html('')
+        //         $('#colpages').html('')
+        //     }
+        // }
+        // let file;
+        // let bwpages = [];
+        // let colpages = [];
+        // let spages = [];
+        // $('.compute').change((event) => {
+        //     compute()
+        // });
+        // let prices = {};
+        // $.ajax({
+        //     url: "cont.php?prices",
+        //     error: (err) => {
+        //         if (err.status == 500) alert('error fetching prices')
+        //     },
+        //     success: (res) => {
+        //         res = JSON.parse(res);
+        //         // prices=res;
+        //         res.map((price) => {
+        //             prices = Object.assign({}, prices, {
+        //                 [price.name]: price.price
+        //             })
+        //         });
+        //         compute();
+        //     },
+        // });
 
-            let copies = $(':input[name="copies"]').val();
-            let bwprice = Object.entries(prices).filter((price) => price[0] == 'grayscale')[0][1]
-            let colprice = Object.entries(prices).filter((price) => price[0] == 'colored')[0][1]
-            let selprice = Object.entries(prices).filter((price) => price[0] == type)[0][1]
-            let paper = Object.entries(prices).filter((pr) => pr[0] == size)[0][1]
-            let extension = file && file.split('.').pop()
-            let bwprintcount = toprint.filter((pr) => bwpages.includes(pr))
-            let colprintcount = toprint.filter((pr) => colpages.includes(pr))
-            $('#cpages').html(`(${colprintcount.length}) ${colprintcount.join(', ')}`)
-            $('#bnwpages').html(`(${bwprintcount.length}) ${bwprintcount.join(', ')}`)
-            let price = 0;
-            $('#cprice').html(colprice)
-            $('#bwprice').html(bwprice)
-            $('#psize').html(`(${size}) ${paper} PHP`)
-            $('#copies').html(`(${copies})`)
-            if (extension == 'pdf') {
-                // console.log('print',toprint)
-                if (type == "colored") {
-                    $('#sumbut').show();
-                    let bp = bwprice * paper * copies * bwprintcount.length;
-                    let cp = colprice * paper * copies * colprintcount.length;
-                    price += bp;
-                    price += cp;
-                    $('#ctotal').html(cp + ' PHP')
-                    $('#bwtotal').html(bp + ' PHP')
+        // function compute() {
+        //     let toprint = [];
+        //     let type = $(':input[name="type"]:checked').val();
+        //     // let size=$(':input[name="size"]:checked').val();
+        //     let size = $('#papersize').val();
+        //     let pages = $(':input[name="pages"]').val();
+        //     pages = pages.split(',');
+        //     let c = 0
+        //     if (pages == "") {
+        //         toprint = spages;
+        //     } else
+        //         pages.map((page) => {
+        //             if (page.indexOf('-') > -1) {
+        //                 nums = page.split('-');
+        //                 c += nums[1] - nums[0] + 1
+        //                 let ar = countt(Number(nums[0]), Number(nums[1]));
+        //                 // console.log('ar',ar)
+        //                 toprint = [...toprint, ...ar];
+        //             } else {
+        //                 c += 1
+        //                 toprint.push(Number(page))
+        //             }
+        //         })
 
-                } else {
-                    $('#sumbut').hide();
-                    price = bwprice * paper * copies * toprint.length;
-                }
-            } else {
-                price += selprice * paper * copies;
-            }
-            $('#price').html(price + ' PHP')
-            // console.log(bwprintcount,colprintcount)
-        }
-        // compute();
-        function countt(from, to) {
-            array = [];
-            while (from <= to) {
-                array.push(from)
-                from++;
-            }
-            return array;
-        }
+        //     let copies = $(':input[name="copies"]').val();
+        //     let bwprice = Object.entries(prices).filter((price) => price[0] == 'grayscale')[0][1]
+        //     let colprice = Object.entries(prices).filter((price) => price[0] == 'colored')[0][1]
+        //     let selprice = Object.entries(prices).filter((price) => price[0] == type)[0][1]
+        //     let paper = Object.entries(prices).filter((pr) => pr[0] == size)[0][1]
+        //     let extension = file && file.split('.').pop()
+        //     let bwprintcount = toprint.filter((pr) => bwpages.includes(pr))
+        //     let colprintcount = toprint.filter((pr) => colpages.includes(pr))
+        //     $('#cpages').html(`(${colprintcount.length}) ${colprintcount.join(', ')}`)
+        //     $('#bnwpages').html(`(${bwprintcount.length}) ${bwprintcount.join(', ')}`)
+        //     let price = 0;
+        //     $('#cprice').html(colprice)
+        //     $('#bwprice').html(bwprice)
+        //     $('#psize').html(`(${size}) ${paper} PHP`)
+        //     $('#copies').html(`(${copies})`)
+        //     if (extension == 'pdf') {
+        //         // console.log('print',toprint)
+        //         if (type == "colored") {
+        //             $('#sumbut').show();
+        //             let bp = bwprice * paper * copies * bwprintcount.length;
+        //             let cp = colprice * paper * copies * colprintcount.length;
+        //             price += bp;
+        //             price += cp;
+        //             $('#ctotal').html(cp + ' PHP')
+        //             $('#bwtotal').html(bp + ' PHP')
 
-        function printit() {
-            $('#printing').modal('show');
-            $.ajax({
-                url: "controller/printfile.php",
-                type: "post",
-                data: {
-                    printfile: file,
-                    type: $(':input[name="type"]').val(),
-                    size: $(':input[name="size"]').val(),
-                    pages: $(':input[name="pages"]').val(),
-                    copies: $(':input[name="copies"]').val(),
-                },
-                error: (err) => {
-                    $('#status').html($('#status').html() + '<br>' + err)
-                },
-                success: (res) => {
-                    // res=JSON.parse(res);
-                    $('#status').html($('#status').html() + '<br>' + res)
-                    getCoins();
-                    let str = 'request id is';
-                    let pos = res.indexOf(str);
-                    if (pos !== false) {
-                        // let lent=(res.indexOf('(')-1)-pos;
-                        pos = pos + str.length
-                        let reqid = res.substring(res.indexOf(str) + str.length, res.indexOf('('))
-                        $('#cancelprint').click((e) => {
-                            cprint(reqid)
-                        })
-                    }
-                },
-            });
-        }
+        //         } else {
+        //             $('#sumbut').hide();
+        //             price = bwprice * paper * copies * toprint.length;
+        //         }
+        //     } else {
+        //         price += selprice * paper * copies;
+        //     }
+        //     $('#price').html(price + ' PHP')
+        //     // console.log(bwprintcount,colprintcount)
+        // }
+        // // compute();
+        // function countt(from, to) {
+        //     array = [];
+        //     while (from <= to) {
+        //         array.push(from)
+        //         from++;
+        //     }
+        //     return array;
+        // }
 
-        function cprint(reqid) {
-            $.ajax({
-                url: "controller/cancelprint.php",
-                type: "post",
-                data: {
-                    reqid: reqid,
-                },
-                error: (err) => {
-                    $('#status').html($('#status').html() + '<br>' + err)
-                },
-                success: (res) => {
-                    // res=JSON.parse(res);
-                    $('#status').html($('#status').html() + '<br>' + res)
+        // function printit() {
+        //     $('#printing').modal('show');
+        //     $.ajax({
+        //         url: "controller/printfile.php",
+        //         type: "post",
+        //         data: {
+        //             printfile: file,
+        //             type: $(':input[name="type"]').val(),
+        //             size: $(':input[name="size"]').val(),
+        //             pages: $(':input[name="pages"]').val(),
+        //             copies: $(':input[name="copies"]').val(),
+        //         },
+        //         error: (err) => {
+        //             $('#status').html($('#status').html() + '<br>' + err)
+        //         },
+        //         success: (res) => {
+        //             // res=JSON.parse(res);
+        //             $('#status').html($('#status').html() + '<br>' + res)
+        //             getCoins();
+        //             let str = 'request id is';
+        //             let pos = res.indexOf(str);
+        //             if (pos !== false) {
+        //                 // let lent=(res.indexOf('(')-1)-pos;
+        //                 pos = pos + str.length
+        //                 let reqid = res.substring(res.indexOf(str) + str.length, res.indexOf('('))
+        //                 $('#cancelprint').click((e) => {
+        //                     cprint(reqid)
+        //                 })
+        //             }
+        //         },
+        //     });
+        // }
 
-                },
-            });
-        }
+        // function cprint(reqid) {
+        //     $.ajax({
+        //         url: "controller/cancelprint.php",
+        //         type: "post",
+        //         data: {
+        //             reqid: reqid,
+        //         },
+        //         error: (err) => {
+        //             $('#status').html($('#status').html() + '<br>' + err)
+        //         },
+        //         success: (res) => {
+        //             // res=JSON.parse(res);
+        //             $('#status').html($('#status').html() + '<br>' + res)
+
+        //         },
+        //     });
+        // }
     </script>
 </body>
 

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Client extends Model
 {
@@ -36,5 +37,10 @@ class Client extends Model
     public function getFolder()
     {
         return $this->mac != 'admin' ? str_replace(':', '', $this->mac) : 'admin';
+    }
+    public static function getPreviewFolder(Client $client,$fileName)
+    {
+        return $client->getFolder().'/preview/'.$fileName;
+        // return storage_path('app/files/'.$client->getFolder().'/preview/'.$fileName.'/');
     }
 }

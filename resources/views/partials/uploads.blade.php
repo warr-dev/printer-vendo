@@ -2,7 +2,7 @@
     <div class="scrollitem">
         <div class="row">
             <div class="col-sm-12 text-center">
-                <img src="{{(asset('thumbs/'.$file))}}" style="max-width:300px;">
+                <img src="{{ asset('thumbs/' . $file) }}" style="max-width:300px;background-color:white">
             </div>
         </div>
 
@@ -14,8 +14,8 @@
                             <form class="print-form" id="print_form_<?= $file ?>" action="index.php" method="post">
                                 <input type="hidden" name="filename" value="<?= $file ?>">
                                 <input type="hidden" name="q" value="print">
-                                <button data-id="<?= $file ?>" type="button" onclick="setdoc(this,'<?= $file ?>')"
-                                    data-toggle="modal" href="#printme" class="btn btn-primary">Print</button>
+                                <button data-id="<?= $file ?>" type="button" onclick="initFile('{{ $file }}')"
+                                    class="btn btn-primary">Print</button>
                             </form>
                         </td>
                         <td class="text-left">
@@ -26,8 +26,6 @@
                         </td>
                     </tr>
                 </table>
-
-
             </div>
         </div>
         <br>
