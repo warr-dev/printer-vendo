@@ -345,7 +345,7 @@
                 </div>
                 <div class="modal-body">
                     <center>
-                        <img src="coin.png" class="pic">
+                        <img src="/img/coin.png" class="pic">
                         <h2 class="blinking">Insert coin to add credits!!</h2>
                         <h3 id="timer">timer</h3>
                         <p>Credits: <span class="credits"></span></p>

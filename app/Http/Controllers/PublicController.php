@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
+use App\Jobs\GeneratePreviewsJob;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToImage\Pdf;
 
@@ -36,9 +35,8 @@ class PublicController extends Controller
             $target_file = Storage::disk('thumbs')->path($request->client->getFolder()) . '/' . $filename . '.png';
             $pdf = new Pdf($actual);
             $pdf->setPage(1)->setOutputFormat('png')->saveImage($target_file);
-            Storage::disk('files')->makeDirectory($request->client->getFolder() . '/preview/' . basename($actual));
-            $destination = dirname($actual) . '/preview/' . basename($actual);
-            $pdf->saveAllPagesAsImages($destination);
+            $destination = $request->client->getFolder() . '/preview/' . basename($actual);
+            dispatch(new GeneratePreviewsJob($pdf,$destination));
             return view('partials.uploads');
         }
 

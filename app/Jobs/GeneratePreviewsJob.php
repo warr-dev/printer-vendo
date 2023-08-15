@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\Client;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,10 +16,15 @@ class GeneratePreviewsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+
     /**
-     * Create a new job instance.
+     * __construct
+     *
+     * @param  Pdf $pdf
+     * @param  string $destination path inside files disk
+     * @return void
      */
-    public function __construct(private $pdfFile)
+    public function __construct(private Pdf $pdf, private $destination)
     {
         //
     }
@@ -28,8 +34,8 @@ class GeneratePreviewsJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $pdf=new Pdf($this->pdfFile);
-        $destination=dirname($this->pdfFile).'/preview/'.basename($this->pdfFile).'';
-        $pdf->saveAllPagesAsImages($destination);
+        Storage::disk('files')->makeDirectory($this->destination);
+        $destination = storage_path('app/files/' . $this->destination);
+        $this->pdf->saveAllPagesAsImages($destination);
     }
 }
