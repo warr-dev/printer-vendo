@@ -15,7 +15,7 @@ class PublicController extends Controller
         $client = $request->client;
         return view('public', compact('client'));
     }
-    public function uploadDoc(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'file' => 'required|mimes:docx,pdf'
@@ -36,7 +36,7 @@ class PublicController extends Controller
             $pdf = new Pdf($actual);
             $pdf->setPage(1)->setOutputFormat('png')->saveImage($target_file);
             $destination = $request->client->getFolder() . '/preview/' . basename($actual);
-            dispatch(new GeneratePreviewsJob($pdf,$destination));
+            dispatch(new GeneratePreviewsJob($pdf, $destination));
             return view('partials.uploads');
         }
 
@@ -48,8 +48,20 @@ class PublicController extends Controller
         $request->validate([
             'file' => 'required|string'
         ]);
-        $file= $request->get('file');
-        $pdf=new Pdf(storage_path('app/files/'.str_replace('/preview','',$file)));
-        return view('partials.modal-print', compact('file','pdf'));
+        $file = $request->get('file');
+        $pdf = new Pdf(storage_path('app/files/' . str_replace('/preview', '', $file)));
+        return view('partials.modal-print', compact('file', 'pdf'));
+    }
+
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|string'
+        ]);
+        $file = $request->get('file');
+        Storage::disk('files')->deleteDirectory($file);
+        Storage::disk('thumbs')->delete(str_replace('/preview', '', $file . '.png'));
+        Storage::disk('files')->delete(str_replace('/preview', '', $file));
+        return back()->with('alert', ['type' => 'success', 'message' => 'deleted']);
     }
 }

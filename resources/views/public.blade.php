@@ -194,6 +194,7 @@
 
     <div class="bg"></div>
     <div class="content">
+        @include('partials.alert')
         <div class="container">
             <div id="showtime"></div>
             <div>
@@ -264,7 +265,7 @@
                           <form action="/controller/uploadfile.php" class="dropzone" id="my-awesome-dropzone"></form>
                         </div>
                       </div> -->
-                        <form action="{{ route('upload.doc') }}" class="dropzone" id="my-awesome-dropzone"></form>
+                        <form action="{{ route('doc.store') }}" class="dropzone" id="my-awesome-dropzone"></form>
                     </div>
                 </div>
                 <div class="modal-footer centered">
