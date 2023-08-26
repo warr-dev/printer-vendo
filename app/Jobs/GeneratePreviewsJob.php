@@ -36,6 +36,9 @@ class GeneratePreviewsJob implements ShouldQueue
     {
         Storage::disk('files')->makeDirectory($this->destination);
         $destination = storage_path('app/files/' . $this->destination);
-        $this->pdf->saveAllPagesAsImages($destination);
+        Storage::disk('files')->setVisibility($this->destination,'public');
+        // echo $destination;
+        $pages = $this->pdf->saveAllPagesAsImages($destination);
+        // print_r($pages);
     }
 }

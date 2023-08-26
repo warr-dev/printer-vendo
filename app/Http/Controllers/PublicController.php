@@ -29,9 +29,11 @@ class PublicController extends Controller
 
             // Move the uploaded file to a storage location
             $actual = $file->storeAs('files/' . $request->client->getFolder(), $filename);
+            Storage::disk('files')->setVisibility($request->client->getFolder(), 'public');
             $actual = storage_path('app/' . $actual);
 
             Storage::disk('thumbs')->makeDirectory($request->client->getFolder());
+            Storage::disk('thumbs')->setVisibility($request->client->getFolder(), 'public');
             $target_file = Storage::disk('thumbs')->path($request->client->getFolder()) . '/' . $filename . '.png';
             $pdf = new Pdf($actual);
             $pdf->setPage(1)->setOutputFormat('png')->saveImage($target_file);
