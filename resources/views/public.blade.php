@@ -187,6 +187,56 @@
         .pages-container {
             padding: 1rem
         }
+
+        :root {
+            --border-width: 7px;
+        }
+
+
+        .sec-loading {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sec-loading .one {
+            height: 80px;
+            width: 80px;
+            border: var(--border-width) solid white;
+            transform: rotate(45deg);
+            border-radius: 0 50% 50% 50%;
+            position: relative;
+            animation: move 0.5s linear infinite alternate-reverse;
+        }
+
+        .sec-loading .one::before {
+            content: "";
+            position: absolute;
+            height: 55%;
+            width: 55%;
+            border-radius: 50%;
+            border: var(--border-width) solid transparent;
+            border-top-color: white;
+            border-bottom-color: white;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: rotate 1s linear infinite;
+        }
+
+        @keyframes rotate {
+            to {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+
+        @keyframes move {
+            to {
+                transform: translateY(15px) rotate(45deg);
+            }
+        }
     </style>
 </head>
 
@@ -229,11 +279,13 @@
                 <div class="lock-screen">
                     <div class="action">
                         <div>
-                            <h4><a data-toggle="modal" href="#uploadDocs"><i class="fa fa-upload" style="font-size:5rem"></i></a></h4>
+                            <h4><a data-toggle="modal" href="#uploadDocs"><i class="fa fa-upload"
+                                        style="font-size:5rem"></i></a></h4>
                             <p>Add File</p>
                         </div>
                         <div>
-                            <h4><a data-toggle="modal" class="addcoins" href="#addcoins"><i class="fa fa-dollar" style="font-size:5rem"></i></a></h4>
+                            <h4><a data-toggle="modal" class="addcoins" href="#addcoins"><i class="fa fa-dollar"
+                                        style="font-size:5rem"></i></a></h4>
                             <p>Add Credits</p>
                         </div>
                     </div>
@@ -250,7 +302,8 @@
     </div>
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="uploadDocs" class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="uploadDocs"
+        class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -277,12 +330,18 @@
     </div>
     <!-- modal -->
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printme" class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printme"
+        class="modal fade">
+        <section class="sec-loading">
+            <div class="one">
+            </div>
+        </section>
     </div>
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="summary" class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="summary"
+        class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -337,7 +396,8 @@
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addcoins" class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="addcoins"
+        class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -363,7 +423,8 @@
     <!-- modal -->
 
     <!-- Modal -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printing" class="modal fade">
+    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="printing"
+        class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -398,7 +459,7 @@
     <script>
         const initFile = filename => {
             $('#printme').modal('show')
-            $('#printme').html('Loading...')
+            // $('#printme').html('Loading...')
             $.ajax({
                 type: "get",
                 url: "{{ route('modal.print') }}",
@@ -415,7 +476,8 @@
             maxFilesize: 100, // MB
             sending: function(file, xhr, formData) {
                 // Add CSRF token to the formData
-                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute(
+                'content'));
             },
             success: function(file, res) {
                 document.getElementById('af').innerHTML = res;
