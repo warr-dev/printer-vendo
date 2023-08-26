@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helper\FileHelper;
 use App\Jobs\GeneratePreviewsJob;
+use Error;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -28,8 +30,9 @@ class PublicController extends Controller
             $extension = pathinfo($filename)['extension'];
 
             // Move the uploaded file to a storage location
-            $actual = $file->storeAs('files/' . $request->client->getFolder(), $filename);
+            Storage::disk('files')->makeDirectory($request->client->getFolder());
             Storage::disk('files')->setVisibility($request->client->getFolder(), 'public');
+            $actual = $file->storeAs('files/' . $request->client->getFolder(), $filename);
             $actual = storage_path('app/' . $actual);
 
             Storage::disk('thumbs')->makeDirectory($request->client->getFolder());
@@ -57,49 +60,17 @@ class PublicController extends Controller
 
     public function getSummary(Request $request)
     {
-        $file = $request->get('file');
-        if (substr($file, strripos($file, '.') + 1) == 'pdf') {
-            // $out=shell_exec('pwd');
-            $out = shell_exec('gs -q  -o - -sDEVICE=inkcov ' . $file);
-            if (strpos($out, 'error') === false) {
-                $a = explode("\n", $out);
-                $asd = array_pop($a);
-                $output = [];
-                $colored_counter = 0;
-                $bw_counter = 0;
-                $colored = [];
-                $bw = [];
-                foreach ($a as $b => $c) {
-                    $output[$b] = explode('  ', $c);
-                    $cyan = floatval($output[$b][0]);
-                    $magenta = floatval($output[$b][1]);
-                    $yellow = floatval($output[$b][2]);
-                    // $black=substr($output[$b][3],0,strpos($output[$b][3],' '));
-                    // foreach(explode('  ',$c) as $colvals){
-                    //     if(int)
-                    // }
-                    if ($cyan > 0 || $magenta > 0 || $yellow > 0) {
-                        $colored_counter++;
-                        array_push($colored, $b + 1);
-                    } else {
-                        $bw_counter++;
-                        array_push($bw, $b + 1);
-                    }
-                }
-                $res = [
-                    'pages' => sizeof($output),
-                    'colored' => $colored_counter,
-                    'bw_counter' => $bw_counter,
-                    'bwpages' => $bw,
-                    'colored_pages' => $colored
-                ];
-                return response()->json($res);
-            } else {
-                abort(404, 'document not found');
-            }
-        } else {
-            abort(422, 'invalid filetype');
-        }
+        $request->validate([
+            'file' => 'required|string'
+        ]);
+        $file = basename($request->get('file'));
+        $path = storage_path('app/files/' . $request->client->getFolder() . '/' . $file);
+        $mime = Storage::disk('files')->mimeType($request->client->getFolder() . '/' . $file);
+        $isPDF = $mime === 'application/pdf';
+        if (!$isPDF)
+            throw new Error('file was not pdf');
+        $colors = FileHelper::getPdfPageColors($path);
+        return response()->json($colors);
     }
     public function destroy(Request $request)
     {
