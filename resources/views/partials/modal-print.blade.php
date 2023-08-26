@@ -70,10 +70,22 @@
             </div>
             <hr>
             <div class="row" id="sum">
-                <div class="col-sm-12"> <span>Credits <span class="credits">credits PHP</span></span> </div>
-                <div class="col-sm-12"> <span>Price: <span id="price"></span></span> </div>
-                <div class="col-sm-12" id="bwpages"></div>
-                <div class="col-sm-12" id="colpages"></div>
+                <div class="col-sm-12"><h3>Document Summary</h3></div>
+                <div class="col-sm-8">
+                    <p>
+                        <strong>Detected BW pages:</strong>
+                        <span id="bwpages"></span>
+                    </p>
+                    <p>
+                        <b>Detected Colored pages</b>
+                        <span id="colpages"></span>
+                    </p>
+                </div>
+                <div class="col-sm-4 text-lg">
+                    <p>Credits <span class="credits">credits PHP</span> </p>
+                    <p> Price: <span id="price"></span></p>
+                </div>
+
             </div>
 
         </div>
@@ -81,8 +93,8 @@
             <button data-dismiss="modal" class="btn btn-theme04" type="button">Cancel</button>
             <button class="btn btn-theme02 addcoins" type="button" data-toggle="modal" href="#addcoins">Add
                 coins</button>
-            <button class="btn btn-primary" onclick="compute()" id="sumbut" type="button" data-toggle="modal"
-                href="#summary">Summary</button>
+            <button class="btn btn-primary" onclick="showSummary('{{ basename($file) }}')" id="sumbut"
+                type="button">Summary</button>
             <button onclick="printit()" class="btn btn-theme03" type="button">Print</button>
         </div>
     </div>
@@ -119,7 +131,7 @@
         if (pageEl.value > {{ $pdf->getNumberOfPages() }})
             pageEl.value = 1
         if (!isNaN(pageEl.value)) {
-            slidesContainer.scrollLeft = slideWidth *( Number(pageEl.value)-1);
+            slidesContainer.scrollLeft = slideWidth * (Number(pageEl.value) - 1);
         }
     }
 </script>
