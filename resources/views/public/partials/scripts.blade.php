@@ -9,4 +9,10 @@
 <!--script for this page-->
 <script src="/lib/dropzone/dropzone.js"></script>
 <script src="/lib/toastr.min.js"></script>
+<script>
+    const loader = `<section class="sec-loading">
+         <div class="one">
+         </div>
+     </section>`
+</script>
 @stack('scripts')
