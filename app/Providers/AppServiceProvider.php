@@ -14,7 +14,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        if ($this->app->environment('local')) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+        }
     }
 
     /**
@@ -25,5 +27,6 @@ class AppServiceProvider extends ServiceProvider
         Response::macro('success', function ($message, $data = [], $code = 200) {
             return response()->json(compact('message', 'data'), $code);
         });
+        
     }
 }
