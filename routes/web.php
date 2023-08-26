@@ -23,6 +23,7 @@ Route::controller(PublicController::class)->group(function ($route) {
     $route->get('/', 'index')->name('public');
     $route->post('/upload/doc', 'uploadDoc')->name('upload.doc');
     $route->get('/modal/print', 'printModal')->name('modal.print');
+    $route->get('/summary', 'getSummary')->name('get.summary');
 });
 Route::middleware(['auth'])
     ->prefix('admin')

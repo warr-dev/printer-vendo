@@ -78,7 +78,7 @@
             <button data-dismiss="modal" class="btn btn-theme04" type="button">Cancel</button>
             <button class="btn btn-theme02 addcoins" type="button" data-toggle="modal" href="#addcoins">Add
                 coins</button>
-            <button class="btn btn-primary" onclick="compute()" id="sumbut" type="button" data-toggle="modal" href="#summary">Summary</button>
+            <button class="btn btn-primary" onclick="showSummary('{{$file}}')">Summary</button>
             <button onclick="printit()" class="btn btn-theme03" type="button">Print</button>
         </div>
     </div>

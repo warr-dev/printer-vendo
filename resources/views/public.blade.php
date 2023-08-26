@@ -395,9 +395,24 @@
     <script src="/lib/dropzone/dropzone.js"></script>
     <script src="/lib/toastr.min.js"></script>
     <script>
-        const initFile = filename => {
+        function initFile(filename) {
             $('#printme').modal('show')
             $('#printme').html('Loading...')
+            $.ajax({
+                type: "get",
+                url: "{{ route('modal.print') }}",
+                data: {
+                    file: filename
+                },
+                success: function(response) {
+                    $('#printme').html(response)
+                }
+            });
+        }
+
+        function getSummary() {
+            $('#summary').modal('show')
+            $('#summary').html('Loading...')
             $.ajax({
                 type: "get",
                 url: "{{ route('modal.print') }}",
@@ -481,6 +496,7 @@
         //         }
         //     });
         // }
+
 
         // function setdoc(node, f) {
         //     let img = node.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.children[
