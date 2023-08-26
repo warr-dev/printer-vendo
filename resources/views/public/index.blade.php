@@ -5,7 +5,6 @@
 <script>
     function initFile(filename) {
         $('#printme').modal('show')
-        $('#printme').html('Loading...')
         $.ajax({
             type: "get",
             url: "{{ route('modal.print') }}",
