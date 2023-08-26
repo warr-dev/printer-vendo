@@ -97,13 +97,15 @@
 
     nextButton.addEventListener("click", () => {
         pageEl.value++;
+        goToPage()
         // slidesContainer.scrollLeft += slide.clientWidth;
-        slidesContainer.scrollLeft = slideWidth * pageEl.value;
+        // slidesContainer.scrollLeft = slideWidth * pageEl.value;
     });
 
     prevButton.addEventListener("click", () => {
         pageEl.value--;
-        slidesContainer.scrollLeft = slideWidth * pageEl.value;
+        goToPage()
+        // slidesContainer.scrollLeft = slideWidth * pageEl.value;
         // slidesContainer.scrollLeft -= slideWidth;
     });
     // slidesContainer.addEventListener('scroll', (e) => {
@@ -111,8 +113,13 @@
     //     page = Math.round(e.target.scrollLeft / slideWidth) + 1;
     // })
 
-    function goToPage(page) {
-        if(!isNaN(page))
-            slidesContainer.scrollLeft = slideWidth * pageEl.value;
+    function goToPage() {
+        if (pageEl.value < 1)
+            pageEl.value = {{ $pdf->getNumberOfPages() }}
+        if (pageEl.value > {{ $pdf->getNumberOfPages() }})
+            pageEl.value = 1
+        if (!isNaN(pageEl.value)) {
+            slidesContainer.scrollLeft = slideWidth *( Number(pageEl.value)-1);
+        }
     }
 </script>
