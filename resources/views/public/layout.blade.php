@@ -7,6 +7,7 @@
 
     <div class="bg"></div>
     <div class="content">
+        @include('partials.alert')
         <div class="container">
             <div id="showtime"></div>
             <div>
@@ -61,13 +62,13 @@
 
     </div>
     @include('public.partials.upload-docs-modal')
-   
+
     @include('public.partials.print-modal-container')
-    
+
     @include('public.partials.transaction-summary-modal')
 
     @include('public.partials.add-coins-modal')
-    
+
     @include('public.partials.printing-modal')
 
 
