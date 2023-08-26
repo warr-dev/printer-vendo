@@ -59,11 +59,13 @@ return [
             'driver' => 'local',
             'root' => storage_path('app/files'),
             'throw' => false,
+            'visibility' => 'public',
         ],
         'thumbs' => [
             'driver' => 'local',
             'root' => storage_path('app/thumbs'),
             'throw' => false,
+            'visibility' => 'public',
         ],
     ],
 
