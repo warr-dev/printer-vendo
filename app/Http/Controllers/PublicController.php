@@ -2,10 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Client;
+use App\Jobs\GeneratePreviewsJob;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToImage\Pdf;
 
@@ -16,7 +15,7 @@ class PublicController extends Controller
         $client = $request->client;
         return view('public.index', compact('client'));
     }
-    public function uploadDoc(Request $request)
+    public function store(Request $request)
     {
         $request->validate([
             'file' => 'required|mimes:docx,pdf'
@@ -36,9 +35,8 @@ class PublicController extends Controller
             $target_file = Storage::disk('thumbs')->path($request->client->getFolder()) . '/' . $filename . '.png';
             $pdf = new Pdf($actual);
             $pdf->setPage(1)->setOutputFormat('png')->saveImage($target_file);
-            Storage::disk('files')->makeDirectory($request->client->getFolder() . '/preview/' . basename($actual));
-            $destination = dirname($actual) . '/preview/' . basename($actual);
-            $pdf->saveAllPagesAsImages($destination);
+            $destination = $request->client->getFolder() . '/preview/' . basename($actual);
+            dispatch(new GeneratePreviewsJob($pdf, $destination));
             return view('partials.uploads');
         }
 
@@ -57,52 +55,59 @@ class PublicController extends Controller
 
     public function getSummary(Request $request)
     {
-        $file=$request->get('file');
-        if(substr($file,strripos($file,'.')+1)=='pdf'){
+        $file = $request->get('file');
+        if (substr($file, strripos($file, '.') + 1) == 'pdf') {
             // $out=shell_exec('pwd');
-            $out=shell_exec('gs -q  -o - -sDEVICE=inkcov '.$file);
-            if(strpos($out,'error')===false){
-                $a=explode("\n",$out);
-                $asd=array_pop($a);
-                $output=[];
-                $colored_counter=0;
-                $bw_counter=0;
-                $colored=[];
-                $bw=[];
-                foreach($a as $b=>$c){
-                    $output[$b]=explode('  ',$c);
-                    $cyan=floatval($output[$b][0]);
-                    $magenta=floatval($output[$b][1]);
-                    $yellow=floatval($output[$b][2]);
+            $out = shell_exec('gs -q  -o - -sDEVICE=inkcov ' . $file);
+            if (strpos($out, 'error') === false) {
+                $a = explode("\n", $out);
+                $asd = array_pop($a);
+                $output = [];
+                $colored_counter = 0;
+                $bw_counter = 0;
+                $colored = [];
+                $bw = [];
+                foreach ($a as $b => $c) {
+                    $output[$b] = explode('  ', $c);
+                    $cyan = floatval($output[$b][0]);
+                    $magenta = floatval($output[$b][1]);
+                    $yellow = floatval($output[$b][2]);
                     // $black=substr($output[$b][3],0,strpos($output[$b][3],' '));
                     // foreach(explode('  ',$c) as $colvals){
                     //     if(int)
                     // }
-                    if($cyan>0||$magenta>0||$yellow>0){
-                         $colored_counter++;
-                        array_push($colored,$b+1);
-                    }
-                    else {
+                    if ($cyan > 0 || $magenta > 0 || $yellow > 0) {
+                        $colored_counter++;
+                        array_push($colored, $b + 1);
+                    } else {
                         $bw_counter++;
-                        array_push($bw,$b+1);
+                        array_push($bw, $b + 1);
                     }
                 }
-                $res=[
-                    'pages'=>sizeof($output),
-                    'colored' =>$colored_counter,
-                    'bw_counter'=>$bw_counter,
-                    'bwpages'=>$bw,
-                    'colored_pages'=>$colored
+                $res = [
+                    'pages' => sizeof($output),
+                    'colored' => $colored_counter,
+                    'bw_counter' => $bw_counter,
+                    'bwpages' => $bw,
+                    'colored_pages' => $colored
                 ];
                 return response()->json($res);
+            } else {
+                abort(404, 'document not found');
             }
-            else
-            {
-                abort(404,'document not found');
-            }
+        } else {
+            abort(422, 'invalid filetype');
         }
-        else{
-            abort(422,'invalid filetype');
-        }
+    }
+    public function destroy(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|string'
+        ]);
+        $file = $request->get('file');
+        Storage::disk('files')->deleteDirectory($file);
+        Storage::disk('thumbs')->delete(str_replace('/preview', '', $file . '.png'));
+        Storage::disk('files')->delete(str_replace('/preview', '', $file));
+        return back()->with('alert', ['type' => 'success', 'message' => 'deleted']);
     }
 }

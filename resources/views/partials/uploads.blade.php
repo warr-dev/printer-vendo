@@ -1,3 +1,4 @@
+
 @foreach (Storage::disk('thumbs')->files(request()->client->getFolder()) as $file)
 <div class="scrollitem">
     <div class="row">
@@ -18,8 +19,10 @@
                         </form>
                     </td>
                     <td class="text-left">
-                        <form action="/controller/managefile.php" method="post">
-                            <input type="hidden" name="filename" value="<?= $file ?>">
+                        <form action="{{route('doc.delete')}}" method="post">
+                            @csrf
+                            @method('delete')
+                            <input type="hidden" name="file" value="{{ dirname($file).'/preview/'.pathinfo($file)['filename'] }}">
                             <button type="submit" name="action" value="delete" class="btn btn-danger">Del</button>
                         </form>
                     </td>
