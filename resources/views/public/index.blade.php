@@ -52,13 +52,22 @@
             </div>
             <!-- /col-lg-4 -->
             <div id="af" class="scrollmenu" style="width:100%">
-                @include('partials.uploads')
+                @include('public.partials.uploads')
             </div>
             <!-- /lock-screen -->
         </div>
         <!-- /container -->
-
     </div>
+    @include('public.partials.upload-docs-modal')
+
+    @include('public.partials.print-modal-container')
+
+    @include('public.partials.transaction-summary-modal')
+
+    @include('public.partials.add-coins-modal')
+
+    @include('public.partials.printing-modal')
+
 @endsection
 
 @push('scripts')
@@ -108,15 +117,18 @@
                 },
                 success: function(res) {
                     // spages = countt(1, res.pages)
-                    $('#bwpages').html(
-                        res.bw_counter > 0 ? `${res.bw_counter} pages (${res.bwpages.join(', ')} )` : 'None'
+                    $('#bw_page').html(
+                        res.bw_count > 0 ? `${res.bw_count} pages (${res.bw_pages.join(', ')} )` : 'None'
                     )
-                    $('#colpages').html(
-                        res.colored > 0 ? `${res.colored} pages (${res.colored_pages.join(', ')} )` : 'None'
+                    $('#colored_page').html(
+                        res.colored_count > 0 ? `${res.colored_count} pages (${res.colored_pages.join(', ')} )` : 'None'
+                    )
+                    $('#overly_colored_page').html(
+                        res.overly_colored_count > 0 ? `${res.overly_colored_count} pages (${res.overly_colored_pages.join(', ')} )` : 'None'
                     )
                     // compute();
-                    $('#cpages').html(`(${res.colored}) ${res.colored_pages.join(', ')}`)
-                    $('#bnwpages').html(`(${res.bw_counter}) ${res.bwpages.join(', ')}`)
+                    // $('#cpages').html(`(${res.colored}) ${res.colored_pages.join(', ')}`)
+                    // $('#bnwpages').html(`(${res.bw_counter}) ${res.bwpages.join(', ')}`)
                 },
                 error: (err) => {
                     alert(err.responseJSON.message);
