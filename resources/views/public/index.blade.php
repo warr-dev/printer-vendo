@@ -119,7 +119,7 @@
                     $('#bnwpages').html(`(${res.bw_counter}) ${res.bwpages.join(', ')}`)
                 },
                 error: (err) => {
-                    alert(err);
+                    alert(err.responseJSON.message);
                 }
             });
         }
