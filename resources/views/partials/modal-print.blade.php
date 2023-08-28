@@ -7,7 +7,7 @@
         <div class="modal-body">
             <center>
                 {{-- <img class="pic" src="#" id="printimg" alt="" style="backgound-color:white;border:1px solid black"> --}}
-                <section class="slider-wrapper">
+                {{-- <section class="slider-wrapper">
                     <button class="slide-arrow" id="slide-arrow-prev">
                         &#8249;
                     </button>
@@ -28,7 +28,8 @@
                         <span> of </span>
                         <b>{{ $pdf->getNumberOfPages() }}</b>
                     </div>
-                </section>
+                </section> --}}
+                <iframe src="{{asset('files/'.$file)}}" width="100%" height="600px"></iframe>
             </center>
 
             <div class="row cont">
@@ -37,6 +38,10 @@
                     <label class="checkbox-inline">
                         <input type="radio" name="type" class="compute" value="colored" checked>
                         Colored
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="radio" name="type" class="compute" value="grayscale" checked>
+                        Grayscale
                     </label>
                 </div>
             </div>
@@ -73,12 +78,16 @@
                 <div class="col-sm-12"><h3>Document Summary</h3></div>
                 <div class="col-sm-8">
                     <p>
-                        <strong>Detected BW pages:</strong>
-                        <span id="bwpages"></span>
+                        <strong>BW pages:</strong>
+                        <span id="bw_page"></span>
                     </p>
                     <p>
-                        <b>Detected Colored pages</b>
-                        <span id="colpages"></span>
+                        <b>Colored pages:</b>
+                        <span id="colored_page"></span>
+                    </p>
+                    <p>
+                        <b>Overly Colored pages:</b>
+                        <span id="overly_colored_page"></span>
                     </p>
                 </div>
                 <div class="col-sm-4 text-lg">
@@ -127,8 +136,8 @@
 
     function goToPage() {
         if (pageEl.value < 1)
-            pageEl.value = {{ $pdf->getNumberOfPages() }}
-        if (pageEl.value > {{ $pdf->getNumberOfPages() }})
+            pageEl.value = {{ $pages }}
+        if (pageEl.value > {{ $pages }})
             pageEl.value = 1
         if (!isNaN(pageEl.value)) {
             slidesContainer.scrollLeft = slideWidth * (Number(pageEl.value) - 1);
