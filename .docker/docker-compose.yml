@@ -53,7 +53,16 @@ services:
     volumes:
       - ./sql_scripts:/docker-entrypoint-initdb.d
       - ./mysql:/var/lib/mysql
-
+  adminer:
+    container_name: printervendo_admin
+    image: adminer
+    network_mode: host
+    # ports:
+    #   - "8080:8080"
+    # networks:
+    #   - printervendo
+    # environment:
+    #   ADMINER_DEFAULT_SERVER: host.docker.internal
   # redis:
   #   image: redis:4.0
   #   container_name: worksuite_redis
