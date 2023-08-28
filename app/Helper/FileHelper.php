@@ -9,6 +9,8 @@ class FileHelper
 {
     public static function getPdfPageColors($file_path)
     {
+        if(ServerHelper::isOnWindows())
+            throw new Error('Server doesnt support ink coverage');
         $out = shell_exec("gs -q  -o - -sDEVICE=inkcov  '$file_path'");
         if (strpos($out, 'error') !== false)
             throw new Error('an error occured');
