@@ -12,9 +12,9 @@
                 <center>
                     <table>
                         <!-- <tr>
-                                      <td class="left"><h4>IP:</h4></td>
-                                      <td class="left"><h4>dasdasd</h4></td>
-                                    </tr> -->
+                                                              <td class="left"><h4>IP:</h4></td>
+                                                              <td class="left"><h4>dasdasd</h4></td>
+                                                            </tr> -->
                         <tr>
                             <td class="left">
                                 <h4>MAC:</h4>
@@ -67,7 +67,6 @@
     @include('public.partials.add-coins-modal')
 
     @include('public.partials.printing-modal')
-
 @endsection
 
 @push('scripts')
@@ -88,18 +87,15 @@
             }
         }
 
-        function initFile(filename) {
+        function initFile(id) {
             $('#printme').modal('show')
             $('#printme').html(loader)
             $.ajax({
                 type: "get",
-                url: "{{ route('modal.print') }}",
-                data: {
-                    file: filename
-                },
+                url: "{{ route('modal.print', ':id') }}".replace(':id', id),
                 success: function(response) {
-                    $('#printme').html(response)
-                    getPagesSummary(filename)
+                    $('#printme').html(response)    
+                    getPagesSummary(id)
                 },
                 error: (err) => {
                     toastr.error('error occur', 'try again')
@@ -108,23 +104,23 @@
             });
         }
 
-        function getPagesSummary(filename) {
+        function getPagesSummary(id) {
             $.ajax({
                 type: "get",
-                url: "{{ route('get.summary') }}",
-                data: {
-                    file: filename
-                },
+                url: "{{ route('get.summary', ':id') }}".replace(':id', id),
                 success: function(res) {
                     // spages = countt(1, res.pages)
                     $('#bw_page').html(
                         res.bw_count > 0 ? `${res.bw_count} pages (${res.bw_pages.join(', ')} )` : 'None'
                     )
                     $('#colored_page').html(
-                        res.colored_count > 0 ? `${res.colored_count} pages (${res.colored_pages.join(', ')} )` : 'None'
+                        res.colored_count > 0 ?
+                        `${res.colored_count} pages (${res.colored_pages.join(', ')} )` : 'None'
                     )
                     $('#overly_colored_page').html(
-                        res.overly_colored_count > 0 ? `${res.overly_colored_count} pages (${res.overly_colored_pages.join(', ')} )` : 'None'
+                        res.overly_colored_count > 0 ?
+                        `${res.overly_colored_count} pages (${res.overly_colored_pages.join(', ')} )` :
+                        'None'
                     )
                     // compute();
                     // $('#cpages').html(`(${res.colored}) ${res.colored_pages.join(', ')}`)

@@ -22,8 +22,8 @@ use Illuminate\Support\Facades\Route;
 Route::controller(PublicController::class)->group(function ($route) {
     $route->get('/', 'index')->name('public');
     $route->post('/doc', 'store')->name('doc.store');
-    $route->get('/modal/print', 'printModal')->name('modal.print');
-    $route->get('/summary', 'getSummary')->name('get.summary');
+    $route->get('/modal/print/{upload}', 'printModal')->name('modal.print');
+    $route->get('/summary/{upload}', 'getSummary')->name('get.summary');
     $route->delete('/doc', 'destroy')->name('doc.delete');
 });
 Route::middleware(['auth'])

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\FileHelper;
 use App\Jobs\GeneratePreviewsJob;
+use App\Models\Upload;
 use Error;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
@@ -27,7 +28,8 @@ class PublicController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $filename = $file->getClientOriginalName();
-            $extension = pathinfo($filename)['extension'];
+            $metadata = pathinfo($filename);
+            $extension = $metadata['extension'];
 
             // Move the uploaded file to a storage location
             Storage::disk('files')->makeDirectory($request->client->getFolder());
@@ -41,31 +43,43 @@ class PublicController extends Controller
             $pdf = new Pdf($actual);
             $pdf->setPage(1)->setOutputFormat('png')->saveImage($target_file);
             $destination = $request->client->getFolder() . '/preview/' . basename($actual);
-            dispatch(new GeneratePreviewsJob($pdf, $destination));
-            return view('partials.uploads');
+            Upload::create([
+                'client_id' => $request->client->id,
+                'file_name' => $filename,
+                'metadata' => json_encode([
+                    'size' =>  Storage::disk('files')->size($request->client->getFolder() . "/$filename"),
+                    'last_modified' =>  Storage::disk('files')->lastModified($request->client->getFolder() . "/$filename"),
+                    'mime_type' => Storage::disk('files')->mimeType($request->client->getFolder() . "/$filename"),
+                    'pages' => $pdf->getNumberOfPages()
+                ]),
+            ]);
+            // dispatch(new GeneratePreviewsJob($pdf, $destination));
+            return view('public.partials.uploads');
         }
 
         return 'No file uploaded.';
     }
 
-    public function printModal(Request $request)
+    public function printModal(Request $request, Upload $upload)
     {
-        $request->validate([
-            'file' => 'required|string'
-        ]);
-        $file = $request->get('file');
-        $pdf = new Pdf(storage_path('app/files/' . str_replace('/preview', '', $file)));
-        return view('partials.modal-print', compact('file', 'pdf'));
+        // $request->validate([
+        //     // 'file' => 'required|string'
+        //     'id' => 'required|numeric|exist:uploads'
+        // ]);
+        // $file = $request->get('file');
+        // $pages=12;
+        return view('public.partials.modal-print', compact('upload'));
     }
 
-    public function getSummary(Request $request)
+    public function getSummary(Request $request, Upload $upload)
     {
-        $request->validate([
-            'file' => 'required|string'
-        ]);
-        $file = basename($request->get('file'));
-        $path = storage_path('app/files/' . $request->client->getFolder() . '/' . $file);
-        $mime = Storage::disk('files')->mimeType($request->client->getFolder() . '/' . $file);
+        // $request->validate([
+        //     'file' => 'required|string'
+        // ]);
+        // $file = basename($request->get('file'));
+        $filepath = $upload->getFilePath();
+        $path = storage_path('app/files/' . $filepath);
+        $mime = Storage::disk('files')->mimeType($filepath);
         $isPDF = $mime === 'application/pdf';
         if (!$isPDF)
             throw new Error('file was not pdf');
@@ -81,6 +95,7 @@ class PublicController extends Controller
         Storage::disk('files')->deleteDirectory($file);
         Storage::disk('thumbs')->delete(str_replace('/preview', '', $file . '.png'));
         Storage::disk('files')->delete(str_replace('/preview', '', $file));
+        Upload::where('file_name', $file)->delete();
         return back()->with('alert', ['type' => 'success', 'message' => 'deleted']);
     }
 }

@@ -29,7 +29,7 @@
                         <b>{{ $pdf->getNumberOfPages() }}</b>
                     </div>
                 </section> --}}
-                <iframe src="{{asset('files/'.$file)}}" width="100%" height="600px"></iframe>
+                {{-- <iframe style="height:300px;width:100%" src="{{ asset('files/' . $upload->getFilePath()) }}"></iframe> --}}
             </center>
 
             <div class="row cont">
@@ -75,7 +75,9 @@
             </div>
             <hr>
             <div class="row" id="sum">
-                <div class="col-sm-12"><h3>Document Summary</h3></div>
+                <div class="col-sm-12">
+                    <h3>Document Summary</h3>
+                </div>
                 <div class="col-sm-8">
                     <p>
                         <strong>BW pages:</strong>
@@ -102,33 +104,33 @@
             <button data-dismiss="modal" class="btn btn-theme04" type="button">Cancel</button>
             <button class="btn btn-theme02 addcoins" type="button" data-toggle="modal" href="#addcoins">Add
                 coins</button>
-            <button class="btn btn-primary" onclick="showSummary('{{ basename($file) }}')" id="sumbut"
+            <button class="btn btn-primary" onclick="showSummary({{ $upload->id }})" id="sumbut"
                 type="button">Summary</button>
             <button onclick="printit()" class="btn btn-theme03" type="button">Print</button>
         </div>
     </div>
 </div>
 <script>
-    const slidesContainer = document.getElementById("slides-container");
-    const slide = document.querySelector(".slide");
-    const prevButton = document.getElementById("slide-arrow-prev");
-    const nextButton = document.getElementById("slide-arrow-next");
-    let pageEl = document.querySelector("#page");
-    const slideWidth = slide.clientWidth;
+    // const slidesContainer = document.getElementById("slides-container");
+    // const slide = document.querySelector(".slide");
+    // const prevButton = document.getElementById("slide-arrow-prev");
+    // const nextButton = document.getElementById("slide-arrow-next");
+    // let pageEl = document.querySelector("#page");
+    // const slideWidth = slide.clientWidth;
 
-    nextButton.addEventListener("click", () => {
-        pageEl.value++;
-        goToPage()
-        // slidesContainer.scrollLeft += slide.clientWidth;
-        // slidesContainer.scrollLeft = slideWidth * pageEl.value;
-    });
+    // nextButton.addEventListener("click", () => {
+    //     pageEl.value++;
+    //     goToPage()
+    //     // slidesContainer.scrollLeft += slide.clientWidth;
+    //     // slidesContainer.scrollLeft = slideWidth * pageEl.value;
+    // });
 
-    prevButton.addEventListener("click", () => {
-        pageEl.value--;
-        goToPage()
-        // slidesContainer.scrollLeft = slideWidth * pageEl.value;
-        // slidesContainer.scrollLeft -= slideWidth;
-    });
+    // prevButton.addEventListener("click", () => {
+    //     pageEl.value--;
+    //     goToPage()
+    //     // slidesContainer.scrollLeft = slideWidth * pageEl.value;
+    //     // slidesContainer.scrollLeft -= slideWidth;
+    // });
     // slidesContainer.addEventListener('scroll', (e) => {
     //     // if(e.target.scrollLeft % slideWidth<=1)
     //     page = Math.round(e.target.scrollLeft / slideWidth) + 1;
@@ -136,8 +138,8 @@
 
     function goToPage() {
         if (pageEl.value < 1)
-            pageEl.value = {{ $pages }}
-        if (pageEl.value > {{ $pages }})
+            pageEl.value = {{ $upload->getMetadata()['pages'] }}
+        if (pageEl.value > {{ $upload->getMetadata()['pages'] }})
             pageEl.value = 1
         if (!isNaN(pageEl.value)) {
             slidesContainer.scrollLeft = slideWidth * (Number(pageEl.value) - 1);
