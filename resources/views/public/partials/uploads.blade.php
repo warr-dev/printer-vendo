@@ -19,7 +19,7 @@
                             </form>
                         </td>
                         <td class="text-left">
-                            <form action="{{ route('doc.delete') }}" method="post">
+                            <form action="{{ route('doc.delete', $file->id) }}" method="post">
                                 @csrf
                                 @method('delete')
                                 <input type="hidden" name="upload_id" value="{{ $file->id }}">

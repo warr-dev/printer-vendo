@@ -53,7 +53,7 @@ class PublicController extends Controller
                     'pages' => $pdf->getNumberOfPages()
                 ]),
             ]);
-            // dispatch(new GeneratePreviewsJob($pdf, $destination));
+            dispatch(new GeneratePreviewsJob($pdf, $destination));
             return view('public.partials.uploads');
         }
 
@@ -62,21 +62,12 @@ class PublicController extends Controller
 
     public function printModal(Request $request, Upload $upload)
     {
-        // $request->validate([
-        //     // 'file' => 'required|string'
-        //     'id' => 'required|numeric|exist:uploads'
-        // ]);
-        // $file = $request->get('file');
-        // $pages=12;
+
         return view('public.partials.modal-print', compact('upload'));
     }
 
-    public function getSummary(Request $request, Upload $upload)
+    public function getSummary(Upload $upload)
     {
-        // $request->validate([
-        //     'file' => 'required|string'
-        // ]);
-        // $file = basename($request->get('file'));
         $filepath = $upload->getFilePath();
         $path = storage_path('app/files/' . $filepath);
         $mime = Storage::disk('files')->mimeType($filepath);
@@ -86,16 +77,12 @@ class PublicController extends Controller
         $colors = FileHelper::getPdfPageColors($path);
         return response()->json($colors);
     }
-    public function destroy(Request $request)
+    public function destroy(Request $request, Upload $upload)
     {
-        $request->validate([
-            'file' => 'required|string'
-        ]);
-        $file = $request->get('file');
-        Storage::disk('files')->deleteDirectory($file);
-        Storage::disk('thumbs')->delete(str_replace('/preview', '', $file . '.png'));
-        Storage::disk('files')->delete(str_replace('/preview', '', $file));
-        Upload::where('file_name', $file)->delete();
+        Storage::disk('files')->delete($upload->getFilePath());
+        Storage::disk('thumbs')->delete($upload->getThumb());
+        Storage::disk('files')->deleteDirectory($upload->getPreviewPath());
+        $upload->delete();
         return back()->with('alert', ['type' => 'success', 'message' => 'deleted']);
     }
 }

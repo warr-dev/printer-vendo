@@ -7,7 +7,7 @@
         <div class="modal-body">
             <center>
                 {{-- <img class="pic" src="#" id="printimg" alt="" style="backgound-color:white;border:1px solid black"> --}}
-                {{-- <section class="slider-wrapper">
+                <section class="slider-wrapper">
                     <button class="slide-arrow" id="slide-arrow-prev">
                         &#8249;
                     </button>
@@ -15,20 +15,18 @@
                         &#8250;
                     </button>
                     <ul class="slides-container" id="slides-container">
-                        @foreach (Storage::disk('files')->files($file) as $fileName)
-                            <li class="slide">
-                                <img src="{{ asset('files/' . $fileName) }}" alt="" width="80%"
-                                    style="border:1px solid black">
-                            </li>
+                        @foreach (Storage::disk('files')->files($upload->getPreviewPath()) as $fileName)
+                        <li class="slide">
+                            <img src="{{ asset('files/' . $fileName) }}" alt="" width="80%" style="border:1px solid black">
+                        </li>
                         @endforeach
                     </ul>
                     <div class="pages-container">page
-                        <input id="page" step="1" oninput="goToPage(this.value)" value="1"
-                            type="number" min="1" max="{{ $pdf->getNumberOfPages() }}" style="width:5rem">
+                        <input id="page" step="1" oninput="goToPage(this.value)" value="1" type="number" min="1" max="{{ $upload->getMetadata()['pages'] }}" style="width:5rem">
                         <span> of </span>
-                        <b>{{ $pdf->getNumberOfPages() }}</b>
+                        <b>{{ $upload->getMetadata()['pages'] }}</b>
                     </div>
-                </section> --}}
+                </section>
                 {{-- <iframe style="height:300px;width:100%" src="{{ asset('files/' . $upload->getFilePath()) }}"></iframe> --}}
             </center>
 
@@ -60,8 +58,7 @@
             <div class="row cont">
                 <label class="col-sm-3 control-label"> Pages </label>
                 <div class="col-sm-9">
-                    <input type="text" name="pages" class="form-control compute"
-                        placeholer="1,2,3 or 2-4 leave blank for all pages">
+                    <input type="text" name="pages" class="form-control compute" placeholer="1,2,3 or 2-4 leave blank for all pages">
                     <span class="help-block">1,2,3 or 2-4 leave blank for all pages</span>
                 </div>
             </div>
@@ -104,37 +101,36 @@
             <button data-dismiss="modal" class="btn btn-theme04" type="button">Cancel</button>
             <button class="btn btn-theme02 addcoins" type="button" data-toggle="modal" href="#addcoins">Add
                 coins</button>
-            <button class="btn btn-primary" onclick="showSummary({{ $upload->id }})" id="sumbut"
-                type="button">Summary</button>
+            <button class="btn btn-primary" onclick="showSummary({{ $upload->id }})" id="sumbut" type="button">Summary</button>
             <button onclick="printit()" class="btn btn-theme03" type="button">Print</button>
         </div>
     </div>
 </div>
 <script>
-    // const slidesContainer = document.getElementById("slides-container");
-    // const slide = document.querySelector(".slide");
-    // const prevButton = document.getElementById("slide-arrow-prev");
-    // const nextButton = document.getElementById("slide-arrow-next");
-    // let pageEl = document.querySelector("#page");
-    // const slideWidth = slide.clientWidth;
+    const slidesContainer = document.getElementById("slides-container");
+    const slide = document.querySelector(".slide");
+    const prevButton = document.getElementById("slide-arrow-prev");
+    const nextButton = document.getElementById("slide-arrow-next");
+    let pageEl = document.querySelector("#page");
+    const slideWidth = slide.clientWidth;
 
-    // nextButton.addEventListener("click", () => {
-    //     pageEl.value++;
-    //     goToPage()
-    //     // slidesContainer.scrollLeft += slide.clientWidth;
-    //     // slidesContainer.scrollLeft = slideWidth * pageEl.value;
-    // });
+    nextButton.addEventListener("click", () => {
+        pageEl.value++;
+        goToPage()
+        // slidesContainer.scrollLeft += slide.clientWidth;
+        // slidesContainer.scrollLeft = slideWidth * pageEl.value;
+    });
 
-    // prevButton.addEventListener("click", () => {
-    //     pageEl.value--;
-    //     goToPage()
-    //     // slidesContainer.scrollLeft = slideWidth * pageEl.value;
-    //     // slidesContainer.scrollLeft -= slideWidth;
-    // });
-    // slidesContainer.addEventListener('scroll', (e) => {
-    //     // if(e.target.scrollLeft % slideWidth<=1)
-    //     page = Math.round(e.target.scrollLeft / slideWidth) + 1;
-    // })
+    prevButton.addEventListener("click", () => {
+        pageEl.value--;
+        goToPage()
+        // slidesContainer.scrollLeft = slideWidth * pageEl.value;
+        // slidesContainer.scrollLeft -= slideWidth;
+    });
+    slidesContainer.addEventListener('scroll', (e) => {
+        // if(e.target.scrollLeft % slideWidth<=1)
+        page = Math.round(e.target.scrollLeft / slideWidth) + 1;
+    })
 
     function goToPage() {
         if (pageEl.value < 1)

@@ -192,8 +192,9 @@
         <!--  notification end -->
       </div>
       <div class="top-menu">
+        <form id="logout" method="post" action="{{ route('logout') }}"> @csrf</form>
         <ul class="nav pull-right top-menu">
-          <li><a class="logout" href="cont/logout.php">Logout</a></li>
+          <li><button class="logout" onclick="document.getElementById('logout').submit()">Logout</a></li>
         </ul>
       </div>
     </header>

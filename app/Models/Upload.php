@@ -25,6 +25,11 @@ class Upload extends Model
         return $this->client->getFolder() . '/' . $this->file_name;
     }
 
+    public function getPreviewPath()
+    {
+        return $this->client->getFolder() . '/preview/' . $this->file_name;
+    }
+
     public function getThumb()
     {
         return $this->client->getFolder() . '/' . $this->file_name . '.png';

@@ -24,7 +24,7 @@ Route::controller(PublicController::class)->group(function ($route) {
     $route->post('/doc', 'store')->name('doc.store');
     $route->get('/modal/print/{upload}', 'printModal')->name('modal.print');
     $route->get('/summary/{upload}', 'getSummary')->name('get.summary');
-    $route->delete('/doc', 'destroy')->name('doc.delete');
+    $route->delete('/doc/{upload}', 'destroy')->name('doc.delete');
 });
 Route::middleware(['auth'])
     ->prefix('admin')
@@ -39,7 +39,7 @@ Route::middleware(['auth'])
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
