@@ -16,6 +16,7 @@ RUN apt-get update; \
     apt-get install -y libmagickwand-dev; \
     pecl install imagick; \
     docker-php-ext-enable imagick;
+
 COPY ./policy.xml /etc/ImageMagick-6/policy.xml 
 
 RUN chown -R www-data:www-data /var/www

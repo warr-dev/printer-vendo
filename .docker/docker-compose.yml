@@ -26,6 +26,7 @@ services:
     build:
       context: .
       # dockerfile: Dockerfile
+    image: printervendo:laravel
     container_name: printervendo_php
     volumes:
       - ../:/var/www/html
@@ -33,6 +34,24 @@ services:
     #   - printervendo
     restart: always
     network_mode: host
+    dns:
+      - 1.1.1.1
+
+  # laravel-worker:
+  #   build: 
+  #     context: ../
+  #     dockerfile: worker.Dockerfile
+  #   image: printervendo:worker
+  #   volumes:
+  #     # - ../:/var/www/html
+  #     - ./worker.conf:/etc/supervisor/conf.d/laravel-worker.conf
+  #   command: ["supervisord", "-c", "/etc/supervisor/conf.d/laravel-worker.conf"]
+  #   depends_on:
+  #     - php
+  #   networks:
+  #     - printervendo
+  #   dns:
+  #     - 1.1.1.1
     
   mysql:
     image: mysql
@@ -53,10 +72,10 @@ services:
     volumes:
       - ./sql_scripts:/docker-entrypoint-initdb.d
       - ./mysql:/var/lib/mysql
-  adminer:
-    container_name: printervendo_admin
-    image: adminer
-    network_mode: host
+  # adminer:
+  #   container_name: printervendo_admin
+  #   image: adminer
+  #   network_mode: host
     # ports:
     #   - "8080:8080"
     # networks:
