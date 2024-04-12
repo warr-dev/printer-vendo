@@ -9,13 +9,9 @@
 clone the repo
 run
 - ```cd .docker && docker compose up -d```
-- ```cd ..``` to go back to root dir
-- ```cp .env.example .env```
-- edit .env values based on your environment
-- ```docker exec -it printervendo_php composer install```
-- ```docker exec -it printervendo_php php artisan key:generate```
-- ```docker exec -it printervendo_php php artisan migrate: fresh --seed```
-- ```docker exec -it printervendo_php php artisan storage:link```
+- ```docker exec -it printervendo_php bash```
+- you will be inside container's terminal/shell
+- ```./start.sh```
 
 done!
 
