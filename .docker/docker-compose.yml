@@ -1,7 +1,7 @@
-version: '3'
-
 networks:
   printervendo:
+volumes:
+  printervendo_db:
 
 services:
   nginx:
@@ -71,7 +71,7 @@ services:
       - printervendo
     volumes:
       - ./sql_scripts:/docker-entrypoint-initdb.d
-      - ./mysql:/var/lib/mysql
+      - printervendo_db:/var/lib/mysql
   # adminer:
   #   container_name: printervendo_admin
   #   image: adminer
