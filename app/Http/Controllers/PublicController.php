@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Spatie\PdfToImage\Pdf;
+use Howtomakeaturn\PDFInfo\PDFInfo;
 
 class PublicController extends Controller
 {
@@ -41,7 +42,9 @@ class PublicController extends Controller
             Storage::disk('thumbs')->setVisibility($request->client->getFolder(), 'public');
             $target_file = Storage::disk('thumbs')->path($request->client->getFolder()) . '/' . $filename . '.png';
             $pdf = new Pdf($actual);
-            $pdf->setPage(1)->setOutputFormat('png')->saveImage($target_file);
+            $pdfinfo = new PDFInfo($actual);
+            // $pdf->setPage(1)->setOutputFormat('png')->saveImage($target_file);
+            $this->convertPdfToImages($actual, $request->client->getFolder());
             $destination = $request->client->getFolder() . '/preview/' . basename($actual);
             Upload::create([
                 'client_id' => $request->client->id,
@@ -50,10 +53,10 @@ class PublicController extends Controller
                     'size' =>  Storage::disk('files')->size($request->client->getFolder() . "/$filename"),
                     'last_modified' =>  Storage::disk('files')->lastModified($request->client->getFolder() . "/$filename"),
                     'mime_type' => Storage::disk('files')->mimeType($request->client->getFolder() . "/$filename"),
-                    'pages' => $pdf->getNumberOfPages()
+                    'pages' => $pdfinfo->pages
                 ]),
             ]);
-            dispatch(new GeneratePreviewsJob($pdf, $destination));
+            // dispatch(new GeneratePreviewsJob($pdf, $destination));
             return view('public.partials.uploads');
         }
 
@@ -84,5 +87,28 @@ class PublicController extends Controller
         Storage::disk('files')->deleteDirectory($upload->getPreviewPath());
         $upload->delete();
         return back()->with('alert', ['type' => 'success', 'message' => 'deleted']);
+    }
+
+    private function convertPdfToImages($pdfFilePath, $destination)
+    {
+        // Generate unique output directory for the JPEG images
+        $outputDirectory = $destination ?? 'pdf_images/' . uniqid();
+
+        // Make sure the output directory exists
+        Storage::disk('thumbs')->makeDirectory($outputDirectory);
+        Storage::disk('thumbs')->setVisibility($outputDirectory, 'public');
+
+        $fullOutput = Storage::disk('thumbs')->path($outputDirectory);
+
+        // Build the Ghostscript command
+        $command = "gs -q -o " . $fullOutput . "/" . basename($pdfFilePath) . ".png -dLastPage=1 -sDEVICE=pngalpha " . $pdfFilePath;
+
+        // Execute the Ghostscript command
+        exec($command);
+
+        // Get list of generated JPEG images
+        $imageFiles = glob(storage_path("app/{$outputDirectory}") . '/*.jpeg');
+
+        return $imageFiles;
     }
 }
