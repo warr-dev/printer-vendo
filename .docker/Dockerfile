@@ -25,5 +25,8 @@ RUN chmod -R 777 /var/www
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# for pdfinfo
+RUN apt-get install -y poppler-utils
+
 RUN echo "upload_max_filesize=30M;" >> "$PHP_INI_DIR/php.ini-production"
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
