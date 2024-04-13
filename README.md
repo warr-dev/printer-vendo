@@ -2,7 +2,7 @@
 
 **Requirements**
 - linux environment (host network runs on linux docker environment only)
-- docker & docker compose (will run at host, please free the ports 9000, 8001)
+- docker & docker compose (will run at host, please free the ports 9000, 8001 on host machine)
 
 **Running**
 
@@ -16,4 +16,3 @@ run
 done!
 
 you can now access the printervendo using http://{host ip/domain}:8001
-sometimes on host machine have issue shows 403:cant verify device you can use locahost:8001
